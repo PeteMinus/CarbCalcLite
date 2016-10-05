@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta http-equiv="cleartype" content="on">
     <meta name="MobileOptimized" content="320">
     <meta name="HandheldFriendly" content="True">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-    
+
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>CarbsToday</title>
 
@@ -17,6 +17,21 @@
     <style type="text/css" media="screen">
         body {
             background-color: #f4f4f4;
+        }
+
+        @media (max-width: 600px) {
+            #totals {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                width: 100%;
+                max-height: 150px;
+            }
+
+            #totals-detail {
+                overflow-y: scroll;
+                max-height: 80px;
+            }
         }
 
         .modal-mask {
@@ -82,7 +97,7 @@
             -webkit-transform: scale(1.1);
             transform: scale(1.1);
         }
-        
+
     </style>
 </head>
 <body>
@@ -97,14 +112,16 @@
     </div>
 </nav>
 
+
 <div class="container">
+    <input type="text" v-model='searchQuery' style="width: 100%; padding: 5px; margin-bottom: 5px; border: 1px solid lightgray; border-radius: 2px" placeholder="Enter search term...">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
             <ul class="list-group">
-                <li v-for="product in products" class="list-group-item" style="overflow: hidden">
+                <li v-for="product in filteredProducts" class="list-group-item" style="overflow: hidden">
                     <span style="white-space: nowrap">{{ product.name }}</span>
                     <div style="position: absolute; right: 0px; top: 0px; background-color: white; padding: 10px;">
-                        <span style="margin-right: 5px">{{ product.weight }} {{ product.unit }} - {{ product.carbs }} OH</span>
+                        <span style="margin-right: 5px">{{ product.weight }} {{ product.unit }} => {{ product.carbs }}</span>
 
                         <button v-show="notInCart(product)" v-on:click=" addToCart(product)"
                                 class="btn btn-xs btn-primary">
@@ -115,13 +132,13 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" id="totals">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-check"></span>
                     Total: <strong><span v-text="total"></span></strong>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" id="totals-detail">
                     <span v-show="!count" class="text-muted">Cart empty</span>
                     <li v-for="item in cart_items" class="list-group-item">
                         {{ item.qty }} &times; {{ item.name }} {{ item.carbs }}
@@ -129,10 +146,11 @@
                             <button v-on:click="decQty(item)" class="btn btn-xs btn-default">
                                 -
                             </button>
-
+<!--
                             <button v-on:click="addQty(item)" class="btn btn-xs btn-default">
                                 +
                             </button>
+                            -->
                         </div>
                     </li>
                 </div>
@@ -188,55 +206,80 @@
     })
 
     var v = new Vue({
-        el: 'body',
-        data: {
-            products: [
-                {'id': 1, 'name': 'Jabolko', 'weight': 130, 'unit': 'g', 'carbs': 15},
-                {
-                    'id': 2,
-                    'name': 'Mandarina z zelo dolgim imenom da je spodaj da brejka vse skup',
-                    'weight': 150,
-                    'unit': 'g',
-                    'carbs': 15
-                }
-            ],
-            cart_items: []
-        },
-        computed: {
-            count: function () {
-                return this.cart_items.length;
-            },
-            total: function () {
-                return _.reduce(this.cart_items, function (n, cart_item) {
-                    return cart_item.carbs * cart_item.qty + n;
-                }, 0).toFixed(0);
-            }
-        },
-        methods: {
-            notInCart: function (product) {
-                var ids = _.pluck(this.cart_items, 'id');
-                return !_.contains(ids, product.id);
-            },
-            addToCart: function (product) {
-                var cart = Vue.util.extend({}, product);
-                var ids = _.pluck(this.cart_items, 'id');
+                el: 'body',
+                data: {
+                    searchQuery: '',
+                    products: [
+                        {'id': 1, 'name': 'Jabolko', 'category': 'sadje', 'weight': 130, 'unit': 'g', 'carbs': 15},
+                        {
+                            'id': 2,
+                            'name': 'Mandarina z zelo dolgim imenom da je spodaj da brejka vse skup',
+                            'category': 'sadje',
+                            'weight': 150,
+                            'unit': 'g',
+                            'carbs': 15
+                        },
+                        {'id': 3, 'name': 'Banana', 'category': 'sadje','weight': 70, 'unit': 'g', 'carbs': 15},
+                        {'id': 4, 'name': 'Borovnice (sveže)', 'category': 'sadje', 'weight': 200, 'unit': 'g', 'carbs': 15},
+                        {'id': 5, 'name': 'Ajdov kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15},
+                        {'id': 6, 'name': 'Ciabatta – čabata', 'category': 'kruh', 'weight': 97, 'unit': 'g', 'carbs': 50},
+                        {'id': 7, 'name': 'Koruzni kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15},
+                        {'id': 8, 'name': 'Polnozrnati kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15},
+                        {'id': 9, 'name': 'Koruzna tortija', 'category': 'kruh', 'weight': 50, 'unit': 'g', 'carbs': 25},
+                        {'id': 10, 'name': 'Pšenična tortija', 'category': 'kruh', 'weight': 50, 'unit': 'g', 'carbs': 25},
 
-                if (!_.contains(ids, product.id)) {
-                    cart.qty = 1;
-                    this.cart_items.push(cart);
+                    ],
+                    cart_items: []
+                },
+                computed: {
+                    filteredProducts: function () {
+                        return this.$options.filters.filterBy(this.products, this.searchQuery);
+                    },
+                    filteredProductsXX: function () {
+                        alert('ha?!');
+
+                        return this.products.filter(function (product) {
+                            return product.name.indexOf(this.searchQuery) > -1;
+                        }.bind(this));
+                    },
+                    count: function () {
+                        return this.cart_items.length;
+                    },
+                    total: function () {
+                        return _.reduce(this.cart_items, function (n, cart_item) {
+                            return cart_item.carbs * cart_item.qty + n;
+                        }, 0).toFixed(0);
+                    }
+                },
+                methods: {
+                    notInCart: function (product) {
+                        var ids = _.pluck(this.cart_items, 'id');
+                        return !_.contains(ids, product.id);
+                    }
+                    ,
+                    addToCart: function (product) {
+                        var cart = Vue.util.extend({}, product);
+                        var ids = _.pluck(this.cart_items, 'id');
+
+                        if (!_.contains(ids, product.id)) {
+                            cart.qty = 1;
+                            this.cart_items.push(cart);
+                        }
+                    }
+                    ,
+                    addQty: function (product) {
+                        product.qty = product.qty + 1;
+                    }
+                    ,
+                    decQty: function (product) {
+                        product.qty -= 1;
+                        if (product.qty <= 0) {
+                            this.cart_items.$remove(product);
+                        }
+                    }
                 }
-            },
-            addQty: function (product) {
-                product.qty = product.qty + 1;
-            },
-            decQty: function (product) {
-                product.qty -= 1;
-                if (product.qty <= 0) {
-                    this.cart_items.$remove(product);
-                }
-            }
-        }
-    });
+            })
+            ;
 </script>
 </body>
 </html>
