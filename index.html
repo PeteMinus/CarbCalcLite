@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>CarbCalc</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css"
+          media="screen">
+    <style type="text/css" media="screen">
+        body {
+            background-color: #f4f4f4;
+        }
+
+        .modal-mask {
+            position: fixed;
+            z-index: 9998;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .5);
+            display: table;
+            transition: opacity .3s ease;
+        }
+
+        .modal-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .modal-container {
+            width: 300px;
+            margin: 0px auto;
+            padding: 20px 30px;
+            background-color: #fff;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+            transition: all .3s ease;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        .modal-header h3 {
+            margin-top: 0;
+            color: #42b983;
+        }
+
+        .modal-body {
+            margin: 20px 0;
+        }
+
+        .modal-default-button {
+            float: right;
+        }
+
+        /*
+         * The following styles are auto-applied to elements with
+         * transition="modal" when their visibility is toggled
+         * by Vue.js.
+         *
+         * You can easily play with the modal transition by editing
+         * these styles.
+         */
+
+        .modal-enter {
+            opacity: 0;
+        }
+
+        .modal-leave-active {
+            opacity: 0;
+        }
+
+        .modal-enter .modal-container,
+        .modal-leave-active .modal-container {
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+        
+    </style>
+</head>
+<body>
+<!-- navigation bar -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="container">
+            <a class="navbar-brand">
+                <i class="glyphicon glyphicon-cutlery"></i> CarbCalc (beta)
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <ul class="list-group">
+                <li v-for="product in products" class="list-group-item" style="overflow: hidden">
+                    <span style="white-space: nowrap">{{ product.name }}</span>
+                    <div style="position: absolute; right: 0px; top: 0px; background-color: white; padding: 10px;">
+                        <span style="margin-right: 5px">{{ product.weight }} {{ product.unit }} - {{ product.carbs }} OH</span>
+
+                        <button v-show="notInCart(product)" v-on:click=" addToCart(product)"
+                                class="btn btn-xs btn-primary">
+                            +
+                        </button>
+                        <span v-show="!notInCart(product)" class="glyphicon glyphicon-ok-circle text-success"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-check"></span>
+                    Total: <strong><span v-text="total"></span></strong>
+                </div>
+                <div class="panel-body">
+                    <span v-show="!count" class="text-muted">Cart empty</span>
+                    <li v-for="item in cart_items" class="list-group-item">
+                        {{ item.qty }} &times; {{ item.name }} {{ item.carbs }}
+                        <div class="pull-right">
+                            <button v-on:click="decQty(item)" class="btn btn-xs btn-default">
+                                -
+                            </button>
+
+                            <button v-on:click="addQty(item)" class="btn btn-xs btn-default">
+                                +
+                            </button>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" type="text/javascript"
+        charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript"
+        charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.12/vue.min.js" type="text/javascript"
+        charset="utf-8"></script>
+
+<script type="text/x-template" id="modal-template">
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+
+                    <div class="modal-header">
+                        <slot name="header">
+                            default header
+                        </slot>
+                    </div>
+
+                    <div class="modal-body">
+                        <slot name="body">
+                            default body
+                        </slot>
+                    </div>
+
+                    <div class="modal-footer">
+                        <slot name="footer">
+                            default footer
+                            <button class="modal-default-button" @click="$emit('close')">
+                                OK
+                            </button>
+                        </slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+
+
+<script type="text/javascript">
+    Vue.component('modal', {
+        template: '#modal-template'
+    })
+
+    var v = new Vue({
+        el: 'body',
+        data: {
+            products: [
+                {'id': 1, 'name': 'Jabolko', 'weight': 130, 'unit': 'g', 'carbs': 15},
+                {
+                    'id': 2,
+                    'name': 'Mandarina z zelo dolgim imenom da je spodaj da brejka vse skup',
+                    'weight': 150,
+                    'unit': 'g',
+                    'carbs': 15
+                }
+            ],
+            cart_items: []
+        },
+        computed: {
+            count: function () {
+                return this.cart_items.length;
+            },
+            total: function () {
+                return _.reduce(this.cart_items, function (n, cart_item) {
+                    return cart_item.carbs * cart_item.qty + n;
+                }, 0).toFixed(0);
+            }
+        },
+        methods: {
+            notInCart: function (product) {
+                var ids = _.pluck(this.cart_items, 'id');
+                return !_.contains(ids, product.id);
+            },
+            addToCart: function (product) {
+                var cart = Vue.util.extend({}, product);
+                var ids = _.pluck(this.cart_items, 'id');
+
+                if (!_.contains(ids, product.id)) {
+                    cart.qty = 1;
+                    this.cart_items.push(cart);
+                }
+            },
+            addQty: function (product) {
+                product.qty = product.qty + 1;
+            },
+            decQty: function (product) {
+                product.qty -= 1;
+                if (product.qty <= 0) {
+                    this.cart_items.$remove(product);
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
