@@ -114,7 +114,9 @@
 
 
 <div class="container">
-    <input type="text" v-model='searchQuery' style="width: 100%; padding: 5px; margin-bottom: 5px; border: 1px solid lightgray; border-radius: 2px" placeholder="Enter search term...">
+    <input type="text" v-model='searchQuery'
+           style="width: 100%; padding: 5px; margin-bottom: 5px; border: 1px solid lightgray; border-radius: 2px"
+           placeholder="Enter search term...">
     <div class="row">
         <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
             <ul class="list-group">
@@ -141,16 +143,21 @@
                 <div class="panel-body" id="totals-detail">
                     <span v-show="!count" class="text-muted">Cart empty</span>
                     <li v-for="item in cart_items" class="list-group-item">
-                        {{ item.qty }} &times; {{ item.name }} {{ item.carbs }}
+                        <input type="text" v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)" type="number" style="width: 30px;" value="{{ item.weight }}"> {{ item.unit }} of {{ item.name }}
                         <div class="pull-right">
+<!--                             <modal :product.sync="toBeEdited" :show.sync="showProductModal">HH</modal> -->
+
+
+
+
                             <button v-on:click="decQty(item)" class="btn btn-xs btn-default">
                                 -
                             </button>
-<!--
-                            <button v-on:click="addQty(item)" class="btn btn-xs btn-default">
-                                +
-                            </button>
-                            -->
+                            <!--
+                                                        <button v-on:click="addQty(item)" class="btn btn-xs btn-default">
+                                                            +
+                                                        </button>
+                                                        -->
                         </div>
                     </li>
                 </div>
@@ -199,55 +206,52 @@
     </transition>
 </script>
 
-
 <script type="text/javascript">
     Vue.component('modal', {
-        template: '#modal-template'
-    })
+        template: '#modal-template',
+        props: {
+            'show': {
+                type: Boolean,
+                required: true,
+                twoWay: true
+            },
+            product: {
+                id: '',
+                weight: ''
+            }
+        }
+    });
 
     var v = new Vue({
                 el: 'body',
                 data: {
                     searchQuery: '',
                     products: [
-                        {'id': 1, 'name': 'Jabolko', 'category': 'sadje', 'weight': 130, 'unit': 'g', 'carbs': 15},
-                        {
-                            'id': 2,
-                            'name': 'Mandarina z zelo dolgim imenom da je spodaj da brejka vse skup',
-                            'category': 'sadje',
-                            'weight': 150,
-                            'unit': 'g',
-                            'carbs': 15
-                        },
-                        {'id': 3, 'name': 'Banana', 'category': 'sadje','weight': 70, 'unit': 'g', 'carbs': 15},
-                        {'id': 4, 'name': 'Borovnice (sveže)', 'category': 'sadje', 'weight': 200, 'unit': 'g', 'carbs': 15},
-                        {'id': 5, 'name': 'Ajdov kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15},
-                        {'id': 6, 'name': 'Ciabatta – čabata', 'category': 'kruh', 'weight': 97, 'unit': 'g', 'carbs': 50},
-                        {'id': 7, 'name': 'Koruzni kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15},
-                        {'id': 8, 'name': 'Polnozrnati kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15},
-                        {'id': 9, 'name': 'Koruzna tortija', 'category': 'kruh', 'weight': 50, 'unit': 'g', 'carbs': 25},
-                        {'id': 10, 'name': 'Pšenična tortija', 'category': 'kruh', 'weight': 50, 'unit': 'g', 'carbs': 25},
+                        {'id': 1, 'name': 'Jabolko', 'category': 'sadje', 'weight': 130, 'unit': 'g', 'carbs': 15, 'calc_carbs' : 15},
+                        {'id': 2, 'name': 'Mandarina', 'category': 'sadje', 'weight': 150, 'unit': 'g', 'carbs': 15, 'calc_carbs' : 15},
+                        {'id': 3, 'name': 'Banana', 'category': 'sadje', 'weight': 70, 'unit': 'g', 'carbs': 15, 'calc_carbs' : 15},
+                        {'id': 4, 'name': 'Borovnice (sveže)', 'category': 'sadje', 'weight': 200, 'unit': 'g', 'carbs': 15, 'calc_carbs' : 15},
+                        {'id': 5, 'name': 'Ajdov kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15, 'calc_carbs' : 15},
+                        {'id': 6, 'name': 'Ciabatta – čabata', 'category': 'kruh', 'weight': 97, 'unit': 'g', 'carbs': 50, 'calc_carbs' : 50},
+                        {'id': 7, 'name': 'Koruzni kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15, 'calc_carbs' : 15},
+                        {'id': 8, 'name': 'Polnozrnati kruh', 'category': 'kruh', 'weight': 30, 'unit': 'g', 'carbs': 15, 'calc_carbs' : 15},
+                        {'id': 9, 'name': 'Koruzna tortija', 'category': 'kruh', 'weight': 50, 'unit': 'g', 'carbs': 25, 'calc_carbs' : 25},
+                        {'id': 10, 'name': 'Pšenična tortija', 'category': 'kruh', 'weight': 50, 'unit': 'g', 'carbs': 25, 'calc_carbs' : 25},
 
                     ],
-                    cart_items: []
+                    cart_items: [],
+                    showProductModal: false
                 },
                 computed: {
                     filteredProducts: function () {
                         return this.$options.filters.filterBy(this.products, this.searchQuery);
-                    },
-                    filteredProductsXX: function () {
-                        alert('ha?!');
-
-                        return this.products.filter(function (product) {
-                            return product.name.indexOf(this.searchQuery) > -1;
-                        }.bind(this));
                     },
                     count: function () {
                         return this.cart_items.length;
                     },
                     total: function () {
                         return _.reduce(this.cart_items, function (n, cart_item) {
-                            return cart_item.carbs * cart_item.qty + n;
+                            return cart_item.calc_carbs + n;
                         }, 0).toFixed(0);
                     }
                 },
@@ -263,19 +267,26 @@
 
                         if (!_.contains(ids, product.id)) {
                             cart.qty = 1;
-                            this.cart_items.push(cart);
+                            this.cart_items.unshift(cart);
                         }
                     }
                     ,
-                    addQty: function (product) {
-                        product.qty = product.qty + 1;
+                    changeQty: function (product) {
+                        console.log(product.carbs)
+                        console.log(product.weight)
+                        console.log(event.target.value)
+
+                        product.calc_carbs = event.target.value * product.carbs / product.weight;
+                        console.log(product.calc_carbs)
+                        console.log('------------ NEXT -----------')
                     }
                     ,
                     decQty: function (product) {
-                        product.qty -= 1;
-                        if (product.qty <= 0) {
-                            this.cart_items.$remove(product);
-                        }
+                        this.cart_items.$remove(product);
+                    },
+                    editSelectedProduct: function (product) {
+                        this.toBeEdited = product;
+                        this.showProductModal = true;
                     }
                 }
             })
