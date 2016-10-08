@@ -143,7 +143,7 @@
                 <div class="panel-body" id="totals-detail">
                     <span v-show="!count" class="text-muted">Cart empty</span>
                     <li v-for="item in cart_items" class="list-group-item">
-                        <input v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)" type="number" style="width: 45px;" value="{{ item.weight }}"> {{ item.unit }} of {{ item.name }}
+                        <input v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)" type="number" style="width: 45px;" value="{{ item.weight }}"> {{ item.unit }} of {{ item.name }} ({{ item.calc_carbs }})
                         <div class="pull-right">
 <!--                             <modal :product.sync="toBeEdited" :show.sync="showProductModal">HH</modal> -->
 
@@ -276,7 +276,7 @@
                         console.log(product.weight)
                         console.log(event.target.value)
 
-                        product.calc_carbs = event.target.value * product.carbs / product.weight;
+                        product.calc_carbs = Math.round(event.target.value * product.carbs / product.weight);
                         console.log(product.calc_carbs)
                         console.log('------------ NEXT -----------')
                     }
