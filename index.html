@@ -5354,6 +5354,10 @@
                         var cart = Vue.util.extend({}, product);
                         var ids = _.pluck(this.cart_items, 'id');
 
+                        if (this.cart_items == null) {
+                            this.cart_items = []
+                        }
+
                         if (!_.contains(ids, product.id)) {
                             cart.qty = 1;
                             this.cart_items.unshift(cart);
