@@ -164,9 +164,12 @@
 <div id="loader" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px;"
      v-if="showAbout">
     Avtor: Peter Pohar (peter.pohar@dlabs.si)<br>
-    Podatki: sladkorna.si<br>
+    Podatki: sladkorna.si (Zaloker&Zaloker)<br>
     <br><br>
-    <button v-on:click="aboutVisible(false)">Zapri</button>
+    D·Labs in Zaloker&Zaloker nista povezana s to aplikacijo.<br>
+    <div style="width: 100%; display: inline-block; text-align: center; margin-top: 40px">
+        <button class="btn btn-default" v-on:click="aboutVisible(false)">Zapri</button>
+    </div>
 
 </div>
 
@@ -180,13 +183,15 @@
 <div id="agreement" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 999; left: 0px; padding: 40px"
      v-if="!agreement">
     <h3>Pogoji uporabe</h3>
-    Podatki v aplikaciji so zgolj informativne narave in namenjeni le vodilu pri prehranu.<br>
+    Podatki v aplikaciji so zgolj informativne narave in namenjeni le vodilu pri prehranu. Za točnost podatkov ne jamčimo. Preračunane vrednosti uporabljajte skladno z vašo dosedanjo prakso.<br>
     Vašo prehrano in posledično potrebna zdravila prilagajajte po navodilih zdravnikov.
     <br>
     <br>
     Z uporabo aplikacije razumete, da avtorji ne morejo biti odgovorni za vaše zdravstveno stanje.<br>
     <br>
-    <button v-on:click="agreementDone()">Se strinjam</button>
+    <div style="width: 100%; display: inline-block; text-align: center; margin-top: 40px">
+        <button class="btn btn-default" v-on:click="agreementDone()">Se strinjam</button>
+    </div>
 
 </div>
 
