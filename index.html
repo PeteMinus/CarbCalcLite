@@ -24,6 +24,10 @@
         }
 
         @media (max-width: 600px) {
+            .panel-default {
+                border-color: black;
+            }
+            
             #totals {
                 position: absolute;
                 bottom: 0px;
@@ -149,7 +153,14 @@
     </div>
 </nav>
 
-<div style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px" v-if="!agreement">
+<div id="loader" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px; text-align: center;"
+     v-if="!readyStatus">
+    Nalagam podatke
+</div>
+
+
+<div id="agreement" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 999; left: 0px; padding: 40px"
+     v-if="!agreement">
     <h3>Pogoji uporabe</h3>
     Podatki v aplikaciji so zgolj informativne narave in namenjeni le vodilu pri prehranu.<br>
     Vašo prehrano in posledično potrebna zdravila prilagajajte po navodilih zdravnikov.
@@ -171,8 +182,10 @@
         <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
             <ul class="list-group">
                 <li v-for="product in filteredProducts" class="list-group-item" style="overflow: hidden">
-                    <span v-show="!notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: red" v-on:click=" removeFromFav(product)"></span>
-                    <span v-show="notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: gray" v-on:click=" addToFav(product)"></span>
+                    <span v-show="!notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: red"
+                          v-on:click=" removeFromFav(product)"></span>
+                    <span v-show="notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: gray"
+                          v-on:click=" addToFav(product)"></span>
 
                     <span style="white-space: nowrap">{{ product.name }}</span>
                     <div style="position: absolute; right: 0px; top: 0px; background-color: white; padding: 10px;">
@@ -5313,11 +5326,13 @@
                     cart_items: JSON.parse(localStorage.getItem("items")),
                     fav_items: JSON.parse(localStorage.getItem("fav_items")),
                     agreement: JSON.parse(localStorage.getItem("agreement")),
-                    showProductModal: false
+                    showProductModal: false,
+                    readyStatus: false,
+                    showMainContent: true
                 },
                 computed: {
                     filteredProducts: function () {
-                        var result =  this.$options.filters.filterBy(this.products, this.searchQuery);
+                        var result = this.$options.filters.filterBy(this.products, this.searchQuery);
                         result = this.$options.filters.orderBy(result, 'name')
                         return result
                     },
@@ -5328,7 +5343,22 @@
                         return _.reduce(this.cart_items, function (n, cart_item) {
                             return cart_item.calc_carbs + n;
                         }, 0).toFixed(0);
+                    },
+                    showAgreement: function () {
+                        if (this.readyStatus == true) {
+                            this.agrement = JSON.parse(localStorage.getItem("agreement"));
+                            if (this.agreement == true) {
+                                this.showMainContent = true;
+                            }
+                        }
+                        console.log('done?')
                     }
+
+                },
+                ready: function () {
+                    this.readyStatus = true;
+                    this.readyStatusAgreement = this.agreement;
+                    console.log(this.readyStatus)
                 },
                 methods: {
                     agreementDone: function () {
@@ -5346,7 +5376,7 @@
                         var ids = _.pluck(this.fav_items, 'id');
                         return !_.contains(ids, product.id);
                     },
-                    addToFav: function(product) {
+                    addToFav: function (product) {
                         if (this.fav_items === null) {
                             this.fav_items = []
                         }
