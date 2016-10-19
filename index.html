@@ -23,11 +23,17 @@
             display: none;
         }
 
+        @media (min-width: 992px) {
+            .col-md-4 {
+                width: auto;
+            }
+        }
+
         @media (max-width: 600px) {
             .panel-default {
                 border-color: black;
             }
-            
+
             #totals {
                 position: absolute;
                 bottom: 0px;
@@ -149,9 +155,21 @@
             <a class="navbar-brand">
                 <i class="glyphicon glyphicon-cutlery"></i> CarbsToday (beta)
             </a>
+            <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px"><i class="glyphicon glyphicon-bullhorn"></i></a>
         </div>
+
     </div>
 </nav>
+
+<div id="loader" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px;"
+     v-if="showAbout">
+    Avtor: Peter Pohar (peter.pohar@dlabs.si)<br>
+    Podatki: sladkorna.si<br>
+    <br><br>
+    <button v-on:click="aboutVisible(false)">Zapri</button>
+
+</div>
+
 
 <div id="loader" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px; text-align: center;"
      v-if="!readyStatus">
@@ -5328,7 +5346,8 @@
                     agreement: JSON.parse(localStorage.getItem("agreement")),
                     showProductModal: false,
                     readyStatus: false,
-                    showMainContent: true
+                    showMainContent: true,
+                    showAbout: false
                 },
                 computed: {
                     filteredProducts: function () {
@@ -5361,6 +5380,9 @@
                     console.log(this.readyStatus)
                 },
                 methods: {
+                    aboutVisible: function(status) {
+                        this.showAbout = status;
+                    },
                     agreementDone: function () {
                         this.agreement = true
                         localStorage.setItem("agreement", JSON.stringify(this.agreement))
