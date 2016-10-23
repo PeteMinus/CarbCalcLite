@@ -218,7 +218,11 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="max-height: 500px; overflow: scroll;">
             <li><a href="#" v-on:click="selectFilterCategory(null)">Vse</a></li>
-            <li><a href="#"><i>Priljubljene</i></a></li>
+            <li style="overflow: hidden">
+                <a v-show="isSelectedCategory('favs')" href="#" style="font-weight: bold;">Priljubljene</a>
+                <a v-show="!isSelectedCategory('favs')" href="#" v-on:click="selectFilterCategory('favs')">Priljubljene</a>
+            </li>
+
             <li role="separator" class="divider"></li>
 
             <li v-for="category in categories" style="overflow: hidden">
@@ -301,8 +305,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript"
         charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.12/vue.min.js" type="text/javascript"
-        charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript"
         charset="utf-8"></script>
 <script type="text/x-template" id="modal-template">
     <transition name="modal">
@@ -5387,10 +5389,28 @@
                 },
                 computed: {
                     filteredProducts: function () {
-                        var result = this.$options.filters.filterBy(this.products, this.searchQuery);
+                        var result = this.products;
+
                         if (this.searchCategory != null) {
-                            result = this.$options.filters.filterBy(result, this.searchCategory);
+
+                            if (this.searchCategory == 'favs') {
+                                var favs = []
+                                var ids = _.pluck(this.fav_items, 'id');
+
+                                console.log(ids);
+                                for (var i = 0, len = ids.length; i < len; i++) {
+                                    var item = _.findWhere(result, {id: ids[i]});
+                                    if (item) {
+                                        favs.push(item);
+                                    }
+                                }
+                                result = favs
+                            } else {
+                                result = _.where(result, {category: this.searchCategory})
+                            }
                         }
+
+                        result = this.$options.filters.filterBy(result, this.searchQuery);
                         result = this.$options.filters.orderBy(result, 'name')
                         return result
                     },
@@ -5419,13 +5439,8 @@
                 },
                 methods: {
                     makeUniqueCategories: function (products) {
-                        a = [];
-                        for (var i = 0, l = products.length; i < l; ++i) {
-                            if (!_.contains(a, products[i].category)) {
-                                a.push(products[i].category)
-                            }
-                        }
-                        return a.sort()
+                        var result = _.uniq(_.pluck(this.products, 'category'), true);
+                        return result;
                     },
                     selectFilterCategory: function (value) {
                         this.searchCategory = value
