@@ -209,17 +209,23 @@
            placeholder="Iskanje (npr. kruh, ajdov, juha, ..." debounce="700">
 
     <span class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="glyphicon glyphicon-menu-hamburger"></span>
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
+
+            <span v-show="!isSelectedCategory(null)" class="glyphicon glyphicon-menu-hamburger" style="color: green"></span>
+            <span v-show="isSelectedCategory(null)" class="glyphicon glyphicon-menu-hamburger"></span>
+
         </button>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="max-height: 500px; overflow: scroll;">
             <li><a href="#" v-on:click="selectFilterCategory(null)">Vse</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#" v-on:click="selectFilterCategory('Kruh')">Kruh</a></li>
-            <li><a href="#" v-on:click="selectFilterCategory('Testenine')">Testenine</a></li>
-            <li><a href="#">...</a></li>
-            <li role="separator" class="divider"></li>
             <li><a href="#"><i>Priljubljene</i></a></li>
+            <li role="separator" class="divider"></li>
+
+            <li v-for="category in categories" style="overflow: hidden">
+                <a v-show="isSelectedCategory(category)" href="#" style="font-weight: bold;">{{category}}</a>
+                <a v-show="!isSelectedCategory(category)" href="#" v-on:click="selectFilterCategory(category)">{{category}}</a>
+            </li>
+
         </ul>
     </span>
 
@@ -351,6 +357,7 @@
                 data: {
                     isActiveTotals: false,
                     items: [],
+                    categories: [],
                     searchQuery: '',
                     searchCategory: null,
                     products: [
@@ -5408,12 +5415,22 @@
                 ready: function () {
                     this.readyStatus = true;
                     this.readyStatusAgreement = this.agreement;
+                    this.categories = this.makeUniqueCategories(this.products)
                 },
                 methods: {
-                    selectFilterCategory: function(value) {
+                    makeUniqueCategories: function (products) {
+                        a = [];
+                        for (var i = 0, l = products.length; i < l; ++i) {
+                            if (!_.contains(a, products[i].category)) {
+                                a.push(products[i].category)
+                            }
+                        }
+                        return a.sort()
+                    },
+                    selectFilterCategory: function (value) {
                         this.searchCategory = value
                     },
-                    isSelectedCategory: function(value) {
+                    isSelectedCategory: function (value) {
                         return value == this.searchCategory;
                     },
                     aboutVisible: function (status) {
@@ -5439,7 +5456,8 @@
                             this.fav_items = []
                         }
 
-                        var fav = []; fav.id = product.id;
+                        var fav = [];
+                        fav.id = product.id;
                         var ids = _.pluck(this.fav_items, 'id');
 
                         if (!_.contains(ids, product.id)) {
@@ -5450,8 +5468,8 @@
                     },
                     removeFromFav: function (product) {
                         var favId = product.id;
-                        this.fav_items.forEach(function(element){
-                            if(element.id == favId) {
+                        this.fav_items.forEach(function (element) {
+                            if (element.id == favId) {
                                 this.fav_items.$remove(element);
                             }
                         }.bind(this));
