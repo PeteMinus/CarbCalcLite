@@ -26,6 +26,7 @@
         @media (min-width: 992px) {
             .col-md-4 {
                 width: auto;
+                min-width: 410px;
             }
         }
 
@@ -155,13 +156,15 @@
             <a class="navbar-brand">
                 <i class="glyphicon glyphicon-cutlery"></i> CarbsToday (beta)
             </a>
-            <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px"><i class="glyphicon glyphicon-bullhorn"></i></a>
+            <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px"><i
+                    class="glyphicon glyphicon-info-sign"></i></a>
         </div>
 
     </div>
 </nav>
 
-<div id="loader" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px;"
+<div id="loader"
+     style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px;"
      v-if="showAbout">
     Avtor: Peter Pohar (<a href="mailto: peter.pohar@dlabs.si">peter.pohar@dlabs.si</a>)<br>
     Podatki: <a href="http://sladkorna.si" target="_blank">sladkorna.si</a> (Zaloker&Zaloker)<br>
@@ -174,16 +177,19 @@
 </div>
 
 
-<div id="loader" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px; text-align: center;"
+<div id="loader"
+     style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px; text-align: center;"
      v-if="!readyStatus">
     Nalagam podatke
 </div>
 
 
-<div id="agreement" style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 999; left: 0px; padding: 40px"
+<div id="agreement"
+     style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 999; left: 0px; padding: 40px"
      v-if="!agreement">
     <h3>Pogoji uporabe</h3>
-    Podatki v aplikaciji so zgolj informativne narave in namenjeni le vodilu pri prehranu. Za točnost podatkov ne jamčimo. Preračunane vrednosti uporabljajte skladno z vašo dosedanjo prakso.<br>
+    Podatki v aplikaciji so zgolj informativne narave in namenjeni le vodilu pri prehranu. Za točnost podatkov ne
+    jamčimo. Preračunane vrednosti uporabljajte skladno z vašo dosedanjo prakso.<br>
     Vašo prehrano in posledično potrebna zdravila prilagajajte po navodilih zdravnikov.
     <br>
     <br>
@@ -199,8 +205,24 @@
 <div class="container" v-if="agreement">
 
     <input type="text" v-model='searchQuery'
-           style="width: 100%; padding: 5px; margin-bottom: 5px; border: 1px solid lightgray; border-radius: 2px"
-           placeholder="Iskanje (npr. kruh, ajdov, juha, ...">
+           style="width: -webkit-calc(100% - 45px); padding: 6px; margin-bottom: 5px;  border: 1px solid lightgray; border-radius: 2px"
+           placeholder="Iskanje (npr. kruh, ajdov, juha, ..." debounce="700">
+
+    <span class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+            <li><a href="#" v-on:click="selectFilterCategory(null)">Vse</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#" v-on:click="selectFilterCategory('Kruh')">Kruh</a></li>
+            <li><a href="#" v-on:click="selectFilterCategory('Testenine')">Testenine</a></li>
+            <li><a href="#">...</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#"><i>Priljubljene</i></a></li>
+        </ul>
+    </span>
+
     <div class="row">
         <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
             <ul class="list-group">
@@ -243,7 +265,7 @@
                     <span v-show="!count" class="text-muted">Empty</span>
                     <li v-for="item in cart_items" class="list-group-item" style="text-align: left;">
                         <input v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)"
-                               type="number" style="width: 45px;" value="{{ item.calc_weight }}"> {{ item.unit }} of {{
+                               type="number" style="width: 45px;" value="{{ item.calc_weight }}"> {{ item.unit }} {{
                         item.name }} ({{ item.calc_carbs }})
                         <div class="pull-right">
                             <button v-on:click="decQty(item)" class="btn btn-xs btn-default">
@@ -274,7 +296,8 @@
         charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.12/vue.min.js" type="text/javascript"
         charset="utf-8"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript"
+        charset="utf-8"></script>
 <script type="text/x-template" id="modal-template">
     <transition name="modal">
         <div class="modal-mask">
@@ -329,6 +352,7 @@
                     isActiveTotals: false,
                     items: [],
                     searchQuery: '',
+                    searchCategory: null,
                     products: [
                         {
                             'id': 1,
@@ -2042,7 +2066,7 @@
                         },
                         {
                             'id': 191,
-                            'name': ' - Fruktoza',
+                            'name': '  - Fruktoza',
                             'category': 'Sladila',
                             'weight': 5,
                             'unit': 'g',
@@ -5357,6 +5381,9 @@
                 computed: {
                     filteredProducts: function () {
                         var result = this.$options.filters.filterBy(this.products, this.searchQuery);
+                        if (this.searchCategory != null) {
+                            result = this.$options.filters.filterBy(result, this.searchCategory);
+                        }
                         result = this.$options.filters.orderBy(result, 'name')
                         return result
                     },
@@ -5375,17 +5402,21 @@
                                 this.showMainContent = true;
                             }
                         }
-                        console.log('done?')
                     }
 
                 },
                 ready: function () {
                     this.readyStatus = true;
                     this.readyStatusAgreement = this.agreement;
-                    console.log(this.readyStatus)
                 },
                 methods: {
-                    aboutVisible: function(status) {
+                    selectFilterCategory: function(value) {
+                        this.searchCategory = value
+                    },
+                    isSelectedCategory: function(value) {
+                        return value == this.searchCategory;
+                    },
+                    aboutVisible: function (status) {
                         this.showAbout = status;
                     },
                     agreementDone: function () {
@@ -5408,18 +5439,23 @@
                             this.fav_items = []
                         }
 
-                        var cart = Vue.util.extend({}, product);
+                        var fav = []; fav.id = product.id;
                         var ids = _.pluck(this.fav_items, 'id');
 
                         if (!_.contains(ids, product.id)) {
-                            cart.qty = 1;
-                            this.fav_items.unshift(cart);
+                            this.fav_items.unshift(product);
                         }
                         localStorage.setItem("fav_items", JSON.stringify(this.fav_items))
 
                     },
                     removeFromFav: function (product) {
-                        this.fav_items.$remove(product);
+                        var favId = product.id;
+                        this.fav_items.forEach(function(element){
+                            if(element.id == favId) {
+                                this.fav_items.$remove(element);
+                            }
+                        }.bind(this));
+
                         localStorage.setItem("fav_items", JSON.stringify(this.fav_items))
 
                     },
@@ -5458,8 +5494,6 @@
                         }
                         items = this.cart_items
                         localStorage.setItem("items", JSON.stringify(items))
-
-                        console.log(items)
 
                     }
                     ,
