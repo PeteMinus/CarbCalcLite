@@ -23,6 +23,11 @@
             display: none;
         }
 
+        .panel {
+            margin-bottom: 0px;
+        }
+
+
         @media (min-width: 992px) {
             .col-md-4 {
                 width: auto;
@@ -156,7 +161,7 @@
             <a class="navbar-brand">
                 <i class="glyphicon glyphicon-cutlery"></i> CarbsToday (beta)
             </a>
-            <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px"><i
+            <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px; margin-right: -5px"><i
                     class="glyphicon glyphicon-info-sign"></i></a>
         </div>
 
@@ -206,7 +211,7 @@
 
     <input type="text" v-model='searchQuery'
            style="width: -webkit-calc(100% - 45px); padding: 6px; margin-bottom: 5px;  border: 1px solid lightgray; border-radius: 2px"
-           placeholder="Iskanje (npr. kruh, ajdov, juha, ..." debounce="700">
+           placeholder="Iskanje (npr. kruh, ajdov, juha, ..." debounce="500">
 
     <span class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
@@ -216,7 +221,7 @@
             <span v-show="isSelectedCategory(null)" class="glyphicon glyphicon-menu-hamburger"></span>
 
         </button>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="max-height: 500px; overflow: scroll;">
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="max-height: 75vh; overflow: scroll;">
             <li><a href="#" v-on:click="selectFilterCategory(null)">Vse</a></li>
             <li style="overflow: hidden">
                 <a v-show="isSelectedCategory('favs')" href="#" style="font-weight: bold;">Priljubljene</a>
