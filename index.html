@@ -241,7 +241,7 @@
     <div class="row">
         <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
             <ul class="list-group">
-                <li v-for="product in filteredProducts" class="list-group-item" style="overflow: hidden">
+                <li v-for="product in filteredProducts" track-by="product.id" class="list-group-item" style="overflow: hidden">
                     <span v-show="!notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: red"
                           v-on:click=" removeFromFav(product)"></span>
                     <span v-show="notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: gray"
@@ -403,7 +403,8 @@
                         }
 
                         result = this.$options.filters.filterBy(result, this.searchQuery);
-                        result = this.$options.filters.orderBy(result, 'name')
+                        result = this.$options.filters.orderBy(result, 'name');
+                        result = this.$options.filters.limitBy(result, 100);
                         return result
                     },
                     count: function () {
