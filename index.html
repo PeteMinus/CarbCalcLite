@@ -12,148 +12,13 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>CarbsToday</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css"
-          media="screen">
-    <style type="text/css" media="screen">
-        body {
-            background-color: #f4f4f4;
-        }
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" media="screen">
 
-        .expandTotals, .collapseTotals {
-            display: none;
-        }
-
-        .panel {
-            margin-bottom: 0px;
-        }
-
-
-        @media (min-width: 992px) {
-            .col-md-4 {
-                width: auto;
-                min-width: 410px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .panel-default {
-                border-color: black;
-            }
-
-            #totals {
-                position: absolute;
-                bottom: 0px;
-                left: 0px;
-                width: 100%;
-                max-height: 150px;
-            }
-
-            #totals.totalsActive {
-                max-height: 90%;
-            }
-
-            .totalsActive {
-                /*max-height: 400px;*/
-                /*height: 400px;*/
-            }
-
-            #totals-detail {
-                overflow-y: scroll;
-                max-height: 80px;
-            }
-
-            #totals-detail.totalsActive {
-                max-height: 80vh;
-            }
-
-            .expandTotals, .collapseTotals {
-                position: absolute;
-                right: 5px;
-                top: 5px;
-                display: inline-block;
-            }
-
-            .expandTotals.totalsActive {
-                display: none;
-            }
-
-            .collapseTotals.totalsActive {
-                display: inline-block;
-            }
-
-            .collapseTotals {
-                display: none;
-            }
-
-        }
-
-        .modal-mask {
-            position: fixed;
-            z-index: 9998;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, .5);
-            display: table;
-            transition: opacity .3s ease;
-        }
-
-        .modal-wrapper {
-            display: table-cell;
-            vertical-align: middle;
-        }
-
-        .modal-container {
-            width: 300px;
-            margin: 0px auto;
-            padding: 20px 30px;
-            background-color: #fff;
-            border-radius: 2px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-            transition: all .3s ease;
-            font-family: Helvetica, Arial, sans-serif;
-        }
-
-        .modal-header h3 {
-            margin-top: 0;
-            color: #42b983;
-        }
-
-        .modal-body {
-            margin: 20px 0;
-        }
-
-        .modal-default-button {
-            float: right;
-        }
-
-        /*
-         * The following styles are auto-applied to elements with
-         * transition="modal" when their visibility is toggled
-         * by Vue.js.
-         *
-         * You can easily play with the modal transition by editing
-         * these styles.
-         */
-
-        .modal-enter {
-            opacity: 0;
-        }
-
-        .modal-leave-active {
-            opacity: 0;
-        }
-
-        .modal-enter .modal-container,
-        .modal-leave-active .modal-container {
-            -webkit-transform: scale(1.1);
-            transform: scale(1.1);
-        }
-
-    </style>
+    <link rel="stylesheet" href="assets/css/main.css" type="text/css" media="screen">
+    
 </head>
 <body>
+<div id="app">
 <!-- navigation bar -->
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -287,14 +152,14 @@
                                 -
                             </button>
                             <!--
-                                                        <button v-on:click="addQty(item)" class="btn btn-xs btn-default">
-                                                            +
-                                                        </button>
-                                                        -->
+                            <button v-on:click="addQty(item)" class="btn btn-xs btn-default">
+                                +
+                            </button>
+                             -->                           
                         </div>
                     </li>
                     <button v-show="count" type="button" class="btn btn-default btn-sm" style="margin-top: 5px"
-                            v-on:click="emptyCart(item)">
+                            v-on:click="emptyCart()">
                         <span class="glyphicon glyphicon-collapse-up"></span> Odstrani vse
                     </button>
 
@@ -303,13 +168,13 @@
         </div>
     </div>
 </div>
-
+</div>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" type="text/javascript"
         charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript"
         charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.12/vue.min.js" type="text/javascript"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js" type="text/javascript"
         charset="utf-8"></script>
 <script src="data.json" type="text/javascript"
         charset="utf-8"></script>
@@ -346,198 +211,6 @@
     </transition>
 </script>
 
-<script type="text/javascript">
-    Vue.component('modal', {
-        template: '#modal-template',
-        props: {
-            'show': {
-                type: Boolean,
-                required: true,
-                twoWay: true
-            },
-            product: {
-                id: '',
-                weight: ''
-            }
-        }
-    });
-
-    var v = new Vue({
-                el: 'body',
-                data: {
-                    isActiveTotals: false,
-                    items: [],
-                    categories: [],
-                    searchQuery: '',
-                    searchCategory: null,
-                    products: foodData,
-                    cart_items: JSON.parse(localStorage.getItem("items")),
-                    fav_items: JSON.parse(localStorage.getItem("fav_items")),
-                    agreement: JSON.parse(localStorage.getItem("agreement")),
-                    showProductModal: false,
-                    readyStatus: false,
-                    showMainContent: true,
-                    showAbout: false
-                },
-                computed: {
-                    filteredProducts: function () {
-                        var result = this.products;
-
-                        if (this.searchCategory != null) {
-
-                            if (this.searchCategory == 'favs') {
-                                var favs = []
-                                var ids = _.pluck(this.fav_items, 'id');
-
-                                console.log(ids);
-                                for (var i = 0, len = ids.length; i < len; i++) {
-                                    var item = _.findWhere(result, {id: ids[i]});
-                                    if (item) {
-                                        favs.push(item);
-                                    }
-                                }
-                                result = favs
-                            } else {
-                                result = _.where(result, {category: this.searchCategory})
-                            }
-                        }
-
-                        result = this.$options.filters.filterBy(result, this.searchQuery);
-                        result = this.$options.filters.orderBy(result, 'name');
-                        result = this.$options.filters.limitBy(result, 100);
-                        return result
-                    },
-                    count: function () {
-                        return this.cart_items.length;
-                    },
-                    total: function () {
-                        return _.reduce(this.cart_items, function (n, cart_item) {
-                            return cart_item.calc_carbs + n;
-                        }, 0).toFixed(0);
-                    },
-                    showAgreement: function () {
-                        if (this.readyStatus == true) {
-                            this.agrement = JSON.parse(localStorage.getItem("agreement"));
-                            if (this.agreement == true) {
-                                this.showMainContent = true;
-                            }
-                        }
-                    }
-
-                },
-                ready: function () {
-                    this.readyStatus = true;
-                    this.readyStatusAgreement = this.agreement;
-                    this.categories = this.makeUniqueCategories(this.products)
-                },
-                methods: {
-                    makeUniqueCategories: function (products) {
-                        var result = _.uniq(_.pluck(this.products, 'category'), true);
-                        return result;
-                    },
-                    selectFilterCategory: function (value) {
-                        this.searchCategory = value
-                    },
-                    isSelectedCategory: function (value) {
-                        return value == this.searchCategory;
-                    },
-                    aboutVisible: function (status) {
-                        this.showAbout = status;
-                    },
-                    agreementDone: function () {
-                        this.agreement = true
-                        localStorage.setItem("agreement", JSON.stringify(this.agreement))
-                    },
-                    toggleTotalsHeight: function (status) {
-                        this.isActiveTotals = status
-                    },
-                    notInCart: function (product) {
-                        var ids = _.pluck(this.cart_items, 'id');
-                        return !_.contains(ids, product.id);
-                    },
-                    notInFav: function (product) {
-                        var ids = _.pluck(this.fav_items, 'id');
-                        return !_.contains(ids, product.id);
-                    },
-                    addToFav: function (product) {
-                        if (this.fav_items === null) {
-                            this.fav_items = []
-                        }
-
-                        var fav = [];
-                        fav.id = product.id;
-                        var ids = _.pluck(this.fav_items, 'id');
-
-                        if (!_.contains(ids, product.id)) {
-                            this.fav_items.unshift(product);
-                        }
-                        localStorage.setItem("fav_items", JSON.stringify(this.fav_items))
-
-                    },
-                    removeFromFav: function (product) {
-                        var favId = product.id;
-                        this.fav_items.forEach(function (element) {
-                            if (element.id == favId) {
-                                this.fav_items.$remove(element);
-                            }
-                        }.bind(this));
-
-                        localStorage.setItem("fav_items", JSON.stringify(this.fav_items))
-
-                    },
-
-                    addToCart: function (product) {
-                        product.calc_weight = product.weight
-                        var cart = Vue.util.extend({}, product);
-                        var ids = _.pluck(this.cart_items, 'id');
-
-                        if (this.cart_items == null) {
-                            this.cart_items = []
-                        }
-
-                        if (!_.contains(ids, product.id)) {
-                            cart.qty = 1;
-                            this.cart_items.unshift(cart);
-                        }
-
-                        try {
-                            items = JSON.parse(localStorage.getItem("items"))
-                        } catch (error) {
-                            items = []
-                        }
-                        items = this.cart_items
-                        localStorage.setItem("items", JSON.stringify(items))
-
-                    },
-
-                    changeQty: function (product) {
-                        product.calc_carbs = Math.round(event.target.value * product.carbs / product.weight);
-                        product.calc_weight = event.target.value
-                        try {
-                            items = JSON.parse(localStorage.getItem("items"))
-                        } catch (error) {
-                            items = []
-                        }
-                        items = this.cart_items
-                        localStorage.setItem("items", JSON.stringify(items))
-
-                    }
-                    ,
-                    decQty: function (product) {
-                        this.cart_items.$remove(product);
-                        localStorage.setItem("items", JSON.stringify(this.cart_items))
-                    },
-                    emptyCart: function () {
-                        this.cart_items = []
-                        localStorage.setItem("items", JSON.stringify(this.cart_items))
-                    },
-                    editSelectedProduct: function (product) {
-                        this.toBeEdited = product;
-                        this.showProductModal = true;
-                    }
-                }
-            })
-            ;
-</script>
+<script type="text/javascript" type="text/javascript" src="assets/js/carbs.js" charset="utf-8"></script>
 </body>
 </html>
