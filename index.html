@@ -105,24 +105,14 @@
 
     <div class="row">
         <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
-            <ul class="list-group">
-                <li v-for="product in filteredProducts" class="list-group-item" style="overflow: hidden">
-                    <span v-show="!notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: red"
-                          v-on:click=" removeFromFav(product)"></span>
-                    <span v-show="notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: gray"
-                          v-on:click=" addToFav(product)"></span>
 
-                    <span style="white-space: nowrap">{{ product.name }}</span>
-                    <div style="position: absolute; right: 0px; top: 0px; background-color: white; padding: 10px;">
-                        <span style="margin-right: 5px">{{ product.weight }} {{ product.unit }} => {{ product.carbs }}</span>
+                <data-table
+                    :data="products"
+                    :columns="gridColumns"
+                    :category="selectedCategory()"
+                    :filter-key="searchQuery">
+                  </data-table>
 
-                        <button v-show="notInCart(product)" v-on:click=" addToCart(product)"
-                                class="btn btn-xs btn-primary">
-                            +
-                        </button>
-                        <span v-show="!notInCart(product)" class="glyphicon glyphicon-ok-circle text-success"></span>
-                    </div>
-                </li>
             </ul>
         </div>
         <div class="col-md-4" id="totals" v-bind:class="{ totalsActive: isActiveTotals }">
@@ -145,17 +135,12 @@
                     <span v-show="!count" class="text-muted">Empty</span>
                     <li v-for="item in cart_items" class="list-group-item" style="text-align: left;">
                         <input v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)"
-                               type="number" style="width: 45px;" value="{{ item.calc_weight }}"> {{ item.unit }} {{
+                             type="number" style="width: 45px;" v-model="item.calc_weight"> {{ item.unit }} {{
                         item.name }} ({{ item.calc_carbs }})
                         <div class="pull-right">
                             <button v-on:click="decQty(item)" class="btn btn-xs btn-default">
                                 -
-                            </button>
-                            <!--
-                            <button v-on:click="addQty(item)" class="btn btn-xs btn-default">
-                                +
-                            </button>
-                             -->                           
+                            </button>                          
                         </div>
                     </li>
                     <button v-show="count" type="button" class="btn btn-default btn-sm" style="margin-top: 5px"
@@ -211,6 +196,30 @@
     </transition>
 </script>
 
+<!-- component template -->
+<script type="text/x-template" id="data-table">
+ <ul class="list-group">
+    <li v-for="product in filteredData" class="list-group-item" style="overflow: hidden">
+        <span v-show="!notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: red" v-on:click="removeFromFav(product)"></span>
+        <span v-show="notInFav(product)" class="glyphicon glyphicon-heart-empty" style="color: gray" v-on:click="addToFav(product)"></span>           
+
+        <span style="white-space: nowrap">{{ product.name }}</span>
+        
+        <div style="position: absolute; right: 0px; top: 0px; background-color: white; padding: 10px;">
+            <span style="margin-right: 5px">{{ product.weight }} {{ product.unit }} => {{ product.carbs }}</span>
+
+            <button v-show="notInCart(product)" v-on:click="addToCart(product)"
+                    class="btn btn-xs btn-primary">
+                +
+            </button>
+            <span v-show="!notInCart(product)" class="glyphicon glyphicon-ok-circle text-success"></span>
+        </div>
+
+    </li>
+</ul>    
+</script>
+<script type="text/javascript" type="text/javascript" src="assets/js/modal.js" charset="utf-8"></script>
+<script type="text/javascript" type="text/javascript" src="assets/js/datatable.js" charset="utf-8"></script>
 <script type="text/javascript" type="text/javascript" src="assets/js/carbs.js" charset="utf-8"></script>
 </body>
 </html>
