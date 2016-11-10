@@ -24,8 +24,11 @@ var v = new Vue({
     },
     computed: {
         count: function () {
-            //return 0;
-            return this.cart_items.length;
+            if(this.cart_items){
+                return this.cart_items.length;
+            }
+
+            return 0;
         },
         total: function () {
             return _.reduce(this.cart_items, function (n, cart_item) {
@@ -90,7 +93,9 @@ var v = new Vue({
         },
         emptyCart: function () {
             this.cart_items = []
-            localStorage.setItem("items", JSON.stringify(this.cart_items))
+            this.isActiveTotals = false
+            console.log(this.cart_items);
+            localStorage.setItem("items", JSON.stringify([]))
         },
     }
 })

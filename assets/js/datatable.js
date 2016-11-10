@@ -29,7 +29,7 @@ var dataTable = {
       var sortKey = this.sortKey
       var filterKey = this.filterKey && this.filterKey.toLowerCase()
       var order = this.sortOrders[sortKey] || 1
-      var data = this.data
+      var data = this.$parent.products
       var selectedCategory = this.category
       if (filterKey) {
         data = data.filter(function (row) {
@@ -60,7 +60,7 @@ var dataTable = {
       }
 
       if (selectedCategory !== null && selectedCategory!=='favs') {
-
+        data = _.where(data, {category: selectedCategory})     
       };
 
       return data
@@ -133,7 +133,6 @@ var dataTable = {
             items = []
         }
         items = this.cart_items
-        console.log(items);
         localStorage.setItem("items", JSON.stringify(items))
 
     },

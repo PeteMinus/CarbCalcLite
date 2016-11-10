@@ -1,136 +1,80 @@
 
-        body {
-            background-color: #f4f4f4;
-        }
+body {
+    background-color: #f4f4f4;
+}
 
-        .expandTotals, .collapseTotals {
-            display: none;
-        }
+.expandTotals, .collapseTotals {
+    display: none;
+}
 
-        .panel {
-            margin-bottom: 0px;
-        }
+.panel {
+    margin-bottom: 0px;
+}
 
+.favicon:hover {
+    cursor: pointer;
+}
 
-        @media (min-width: 992px) {
-            .col-md-4 {
-                width: auto;
-                min-width: 410px;
-            }
-        }
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
+}
 
-        @media (max-width: 600px) {
-            .panel-default {
-                border-color: black;
-            }
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
 
-            #totals {
-                position: absolute;
-                bottom: 0px;
-                left: 0px;
-                width: 100%;
-                max-height: 150px;
-            }
+.modal-container {
+    width: 300px;
+    margin: 0px auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    font-family: Helvetica, Arial, sans-serif;
+}
 
-            #totals.totalsActive {
-                max-height: 90%;
-            }
+.modal-header h3 {
+    margin-top: 0;
+    color: #42b983;
+}
 
-            .totalsActive {
-                /*max-height: 400px;*/
-                /*height: 400px;*/
-            }
+.modal-body {
+    margin: 20px 0;
+}
 
-            #totals-detail {
-                overflow-y: scroll;
-                max-height: 80px;
-            }
+.modal-default-button {
+    float: right;
+}
 
-            #totals-detail.totalsActive {
-                max-height: 80vh;
-            }
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
 
-            .expandTotals, .collapseTotals {
-                position: absolute;
-                right: 5px;
-                top: 5px;
-                display: inline-block;
-            }
+.modal-enter {
+    opacity: 0;
+}
 
-            .expandTotals.totalsActive {
-                display: none;
-            }
+.modal-leave-active {
+    opacity: 0;
+}
 
-            .collapseTotals.totalsActive {
-                display: inline-block;
-            }
-
-            .collapseTotals {
-                display: none;
-            }
-
-        }
-
-        .modal-mask {
-            position: fixed;
-            z-index: 9998;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, .5);
-            display: table;
-            transition: opacity .3s ease;
-        }
-
-        .modal-wrapper {
-            display: table-cell;
-            vertical-align: middle;
-        }
-
-        .modal-container {
-            width: 300px;
-            margin: 0px auto;
-            padding: 20px 30px;
-            background-color: #fff;
-            border-radius: 2px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-            transition: all .3s ease;
-            font-family: Helvetica, Arial, sans-serif;
-        }
-
-        .modal-header h3 {
-            margin-top: 0;
-            color: #42b983;
-        }
-
-        .modal-body {
-            margin: 20px 0;
-        }
-
-        .modal-default-button {
-            float: right;
-        }
-
-        /*
-         * The following styles are auto-applied to elements with
-         * transition="modal" when their visibility is toggled
-         * by Vue.js.
-         *
-         * You can easily play with the modal transition by editing
-         * these styles.
-         */
-
-        .modal-enter {
-            opacity: 0;
-        }
-
-        .modal-leave-active {
-            opacity: 0;
-        }
-
-        .modal-enter .modal-container,
-        .modal-leave-active .modal-container {
-            -webkit-transform: scale(1.1);
-            transform: scale(1.1);
-        }
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
