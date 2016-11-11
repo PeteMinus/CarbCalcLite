@@ -1,56 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="cleartype" content="on">
-    <meta name="MobileOptimized" content="320">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="cleartype" content="on">
+        <meta name="MobileOptimized" content="320">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
-
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <title>Carbs.Today (ver. 2.0)</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" media="screen">
-
-    <link rel="stylesheet" href="assets/css/main.css" type="text/css" media="screen">
-    <link rel="stylesheet" href="assets/css/mediaqueries.css" type="text/css" media="screen">
+        <title>Carbs.Today (ver. 2.0)</title>
     
-</head>
-<body>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&amp;subset=latin-ext" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/main.css" type="text/css" media="screen">
 
-    <div id="app">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="container">
-                    <a class="navbar-brand">
-                        <i class="glyphicon glyphicon-cutlery"></i> Carbs.Today
-                    </a>
-                    <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px; margin-right: -5px"><i
-                            class="glyphicon glyphicon-info-sign"></i></a>
-                </div>
-
-            </div>
-        </nav>
-
-        <div class="container">
-            <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
-                <list-component></list-component>
-            </div>    
-            <div class="col-md-4">
-                <basket-component></basket-component>
-            </div>    
-        </div>    
-
+    </head>
+    <body>
         
-    </div>
+        <div id="app" v-bind:class="{'is-side': side}">
+            <header id="app-head">
+                <section>
+                    <div class="app-head-title">
+                        <img src="assets/carbs.svg"> 
+                        <span>Carbs Today</span>
+                    </div>
+                </section>
+                <section>
+                    <div class="app-head-actions">
+                        <button v-if="totalItems" v-on:click="clearBasket()">
+                            Počisti seznam
+                        </button>
+                        <button v-on:click="toggleSide()">
+                            <span v-show="!side">Dodaj živilo</span>
+                            <span v-show="side">Zapri</span>
+                        </button>
+                    </div>
+                </section>
+            </header>
+            <main id="app-body">
+                <basket-component v-on:side="toggleSide()"></basket-component>
+            </main>
+            <aside id="app-side"> 
+                <list-component></list-component>
+            </aside>
+            <footer id="app-foot">
+                <div class="app-foot-main">
+                    Skupaj OH: <span v-text="totalCarbs"></span>
+                </div>
+            </footer>
+        </div>
+    
+        <!--
+        <div id="app">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="container">
+                        <a class="navbar-brand">
+                            <i class="glyphicon glyphicon-cutlery"></i> Carbs.Today
+                        </a>
+                        <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px; margin-right: -5px"><i
+                                class="glyphicon glyphicon-info-sign"></i></a>
+                    </div>
 
-    <script src="jspm_packages/system.js"></script>
-    <script src="config.js"></script>
-    <script>
-        System.import('lib/main.js');
-    </script>
+                </div>
+            </nav>
 
-</body>
+            <div class="container">
+                <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
+                    <list-component></list-component>
+                </div>    
+                <div class="col-md-4">
+                    <basket-component></basket-component>
+                </div>    
+            </div>    
+
+            
+        </div>
+        -->
+
+        <script src="jspm_packages/system.js"></script>
+        <script src="config.js"></script>
+        <script>
+            System.import('lib/main.js');
+        </script>
+
+    </body>
 </html>

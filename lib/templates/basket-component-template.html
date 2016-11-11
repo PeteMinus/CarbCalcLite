@@ -1,4 +1,37 @@
-<div class="col-md-4" id="totals">
+<div class="basket">
+    
+    <table class="basket-breakdown" v-if="basket.items.length">
+        <tbody>
+            <tr v-for="item in basket.items">
+                <td>
+                    <div class="input-text small append">
+                        <input type="text" v-model="item.calc_weight">
+                        <span>{{ item.unit }}</span>
+                    </div>
+                </td>
+                <td>
+                    {{ item.name }}
+                </td>
+                <td>
+                    {{ item.calc_carbs }}
+                </td>
+                <td>
+                    <button class="btn danger small">×</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="basket-empty" v-if="!basket.items.length">
+        
+        <div class="basket-empty-content">
+            <p>V vašem seznamu ni nobenega živila</p>
+            <button class="btn default" v-on:click="toggleSide()">Dodaj živilo</button>
+        </div>
+
+    </div>
+
+    <!--
         <div class="panel panel-default" v-if="basket.items.length > 0">
             <div class="panel-heading" style="position:relative;">
                 <span class="glyphicon glyphicon-check"></span>
@@ -17,4 +50,5 @@
             
         </div>
     </div>
+    -->
 </div>
