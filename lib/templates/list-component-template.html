@@ -1,0 +1,14 @@
+<ul class="list-group" id="carbs-list">
+    <li v-for="product in carbs" class="list-group-item" style="overflow: hidden">
+        <span style="white-space: nowrap">{{ product.name }}</span>
+        
+        <div style="position: absolute; right: 0px; top: 0px; background-color: white; padding: 10px;">
+            <span style="margin-right: 5px">{{ product.weight }} {{ product.unit }} <span class="glyphicon glyphicon-arrow-right"></span> {{ product.carbs }}</span>
+            <div class="pull-right">
+                <button v-on:click="addToBasket(product)" class="btn btn-xs btn-default">
+                    +
+                </button>                          
+            </div>
+        </div>
+    </li>
+</ul> 

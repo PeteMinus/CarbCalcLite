@@ -1,0 +1,20 @@
+<div class="col-md-4" id="totals">
+        <div class="panel panel-default" v-if="basket.items.length > 0">
+            <div class="panel-heading" style="position:relative;">
+                <span class="glyphicon glyphicon-check"></span>
+                Skupaj OH: <strong><span v-text="total"></span></strong>
+            </div>
+            <div class="panel-body" id="totals-detail"
+                 style="text-align: center">
+                <li v-for="item in basket.items" class="list-group-item" style="text-align: left;">
+                    <input type="number" style="width: 45px;" v-model="item.calc_weight"> {{ item.unit }} {{item.name }} ({{ item.calc_carbs }})
+                    <div class="pull-right">
+                                                 
+                    </div>
+                </li>
+                <button type="button" class="btn btn-warning" v-on:click="emptyBasket()" style="margin-top:20px;"><span class="glyphicon glyphicon-trash"></span>  izprazni seznam</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
