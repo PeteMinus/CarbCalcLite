@@ -1,54 +1,41 @@
 <div class="basket">
-    
-    <table class="basket-breakdown" v-if="basket.items.length">
-        <tbody>
-            <tr v-for="item in basket.items">
-                <td>
-                    <div class="input-text small append">
-                        <input type="text" v-model="item.calc_weight">
-                        <span>{{ item.unit }}</span>
-                    </div>
-                </td>
-                <td>
-                    {{ item.name }}
-                </td>
-                <td>
-                    {{ item.calc_carbs }}
-                </td>
-                <td>
-                    <button class="btn danger small">×</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 
-    <div class="basket-empty" v-if="!basket.items.length">
-        
-        <div class="basket-empty-content">
-            <p>V vašem seznamu ni nobenega živila</p>
-            <button class="btn default" v-on:click="toggleSide()">Dodaj živilo</button>
-        </div>
-
-    </div>
-
-    <!--
-        <div class="panel panel-default" v-if="basket.items.length > 0">
-            <div class="panel-heading" style="position:relative;">
-                <span class="glyphicon glyphicon-check"></span>
-                Skupaj OH: <strong><span v-text="total"></span></strong>
+    <div class="basket-body">
+        <table class="basket-breakdown" v-if="totalItems">
+            <tbody>
+                <tr v-for="item in basket.items">
+                    <td>
+                        <div class="input-text small append">
+                            <input type="text" v-model="item.calc_weight">
+                            <span>{{ item.unit }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ item.name }}
+                    </td>
+                    <td>
+                        {{ item.calc_carbs }}
+                    </td>
+                    <td>
+                        <button class="btn danger small">×</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="basket-empty" v-if="!totalItems">
+            <div class="basket-empty-content"> 
+                <p>Za sestavo obroka dodajte živilo</p> 
             </div>
-            <div class="panel-body" id="totals-detail"
-                 style="text-align: center">
-                <li v-for="item in basket.items" class="list-group-item" style="text-align: left;">
-                    <input type="number" style="width: 45px;" v-model="item.calc_weight"> {{ item.unit }} {{item.name }} ({{ item.calc_carbs }})
-                    <div class="pull-right">
-                                                 
-                    </div>
-                </li>
-                <button type="button" class="btn btn-warning" v-on:click="emptyBasket()" style="margin-top:20px;"><span class="glyphicon glyphicon-trash"></span>  izprazni seznam</button>
-            </div>
-            
         </div>
     </div>
-    -->
+
+    <div class="basket-foot">
+        <section>
+            Skupaj OH: <span v-text="totalCarbs"></span>
+        </section>
+        <section v-if="totalItems">
+            <button class="btn extrasmall danger" v-on:click="emptyBasket()">Počisti</button>
+        </section>
+    </div>
+
 </div>

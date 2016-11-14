@@ -27,56 +27,21 @@
                 </section>
                 <section>
                     <div class="app-head-actions">
-                        <button v-if="totalItems" v-on:click="clearBasket()">
-                            Počisti seznam
-                        </button>
                         <button v-on:click="toggleSide()">
-                            <span v-show="!side">Dodaj živilo</span>
+                            <span v-show="!side && !totalItems">Sestavi obrok</span>
+                            <span v-show="!side && totalItems">Uredi obrok</span>
                             <span v-show="side">Zapri</span>
                         </button>
                     </div>
                 </section>
             </header>
             <main id="app-body">
-                <basket-component v-on:side="toggleSide()"></basket-component>
+                <list-component></list-component>
             </main>
             <aside id="app-side"> 
-                <list-component></list-component>
+                <basket-component></basket-component>
             </aside>
-            <footer id="app-foot">
-                <div class="app-foot-main">
-                    Skupaj OH: <span v-text="totalCarbs"></span>
-                </div>
-            </footer>
-        </div>
-    
-        <!--
-        <div id="app">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <div class="container">
-                        <a class="navbar-brand">
-                            <i class="glyphicon glyphicon-cutlery"></i> Carbs.Today
-                        </a>
-                        <a v-on:click="aboutVisible(true)" style="font-size: 18px; float: right; margin: 14px; margin-right: -5px"><i
-                                class="glyphicon glyphicon-info-sign"></i></a>
-                    </div>
-
-                </div>
-            </nav>
-
-            <div class="container">
-                <div class="col-md-4" style="overflow-y: scroll; max-height: 80vh; padding-bottom: 250px">
-                    <list-component></list-component>
-                </div>    
-                <div class="col-md-4">
-                    <basket-component></basket-component>
-                </div>    
-            </div>    
-
-            
-        </div>
-        -->
+        </div>>
 
         <script src="jspm_packages/system.js"></script>
         <script src="config.js"></script>

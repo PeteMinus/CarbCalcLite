@@ -8,7 +8,8 @@
         </section>
         <section>
             <div class="list-item-actions">
-                <button class="btn default" v-on:click="addToBasket(product)">+ {{ product.carbs }}</button>
+                <div>{{ product.carbs }}</div>
+                <button class="btn small default" v-on:click="addToBasket(product)">+ Dodaj</button>
             </div>
         </section>
     </li>
