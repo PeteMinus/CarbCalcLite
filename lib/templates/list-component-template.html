@@ -1,16 +1,26 @@
-<ul class="list">
-    <li v-for="product in carbs" class="list-item">
-        <section>
-            <div class="list-item-data">
-                {{ product.name }} 
-                <span>{{ product.weight }}{{ product.unit }}</span>
-            </div>
-        </section>
-        <section>
-            <div class="list-item-actions">
-                <div>{{ product.carbs }}</div>
-                <button class="btn small default" v-on:click="addToBasket(product)">+ Dodaj</button>
-            </div>
-        </section>
-    </li>
-</ul> 
+<div>
+    <input type="text" v-model='searchQuery' debounce="500">
+    <select name="filterCategory" v-model="searchCategory" v-on:change="selectFilterCategory(searchCategory)">
+        <option value="">Vse kategorije</option>
+        <option value="favs">Priljubljene</option>    
+        <option v-for="category in categories" v-bind:value="category">{{category}}</option>
+    </select> 
+
+    <ul class="list">
+        <li v-for="product in carbs" class="list-item">
+            <section>
+                <div class="list-item-data">
+                    {{ product.name }} 
+                    <span>{{ product.weight }}{{ product.unit }}</span>
+                </div>
+            </section>
+            <section>
+                <div class="list-item-actions">
+                    <div>{{ product.carbs }}</div>
+                    <button class="btn small default" v-on:click="addToBasket(product)">+ Dodaj</button>
+                </div>
+            </section>
+        </li>
+    </ul> 
+</div>
+
