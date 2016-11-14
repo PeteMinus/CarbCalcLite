@@ -17,7 +17,7 @@
             <section>
                 <div class="list-item-actions">
                     <div>{{ product.carbs }}</div>
-                    <button class="btn small default" v-on:click="addToBasket(product)">+ Dodaj</button>
+                    <button class="btn small default" v-if="!isInBasket(product)" v-on:click="addToBasket(product)">+ Dodaj</button>
                 </div>
             </section>
         </li>
