@@ -18,6 +18,44 @@
     <body>
         
         <div id="app" v-bind:class="{'is-side': side}">
+
+            <div id="loader"
+                 style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; left: 0px; padding: 40px; text-align: center;"
+                 v-if="!readyStatus">
+                Nalagam podatke
+            </div>
+
+           <div id="authors"
+                 style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 999; left: 0px; padding: 40px;"
+                 v-if="authors">
+                Idejni vodja: Peter Pohar (<a href="mailto: peter.pohar@dlabs.si">peter.pohar@dlabs.si</a>)<br>
+                Tehnična izvedba: Beno Rudolf (D·Labs) in Aljaž Povše (D·Labs)<br/>
+                Podatki: <a href="http://sladkorna.si" target="_blank">sladkorna.si</a> (Zaloker&Zaloker)<br>
+                <br><br>
+                D·Labs in Zaloker&Zaloker nista povezana s to aplikacijo.<br>
+                <div style="width: 100%; display: inline-block; text-align: center; margin-top: 40px">
+                    <button v-on:click="authorsModal(false)">Zapri</button>
+                </div>
+
+            </div>
+
+            <div id="agreement"
+                 style="position: absolute; width: 100%; height: 100%; background-color: #ffffff; z-index: 999; left: 0px; padding: 40px"
+                 v-if="!agreement">
+                <h3>Pogoji uporabe</h3>
+                Podatki v aplikaciji so zgolj informativne narave in namenjeni le vodilu pri prehranu. Za točnost podatkov ne
+                jamčimo. Preračunane vrednosti uporabljajte skladno z vašo dosedanjo prakso.<br>
+                Vašo prehrano in posledično potrebna zdravila prilagajajte po navodilih zdravnikov.
+                <br>
+                <br>
+                Z uporabo aplikacije razumete, da avtorji ne morejo biti odgovorni za vaše zdravstveno stanje.<br>
+                <br>
+                <div style="width: 100%; display: inline-block; text-align: center; margin-top: 40px">
+                    <button class="btn btn-default" v-on:click="agreementDone()">Se strinjam</button>
+                </div>
+
+            </div>
+
             <header id="app-head">
                 <section>
                     <div class="app-head-title">
@@ -27,6 +65,7 @@
                 </section>
                 <section>
                     <div class="app-head-actions">
+                        <button v-on:click="authorsModal(true)">Avtorji</button>
                         <button v-on:click="toggleSide()">
                             <span v-show="!side && !totalItems">Sestavi obrok</span>
                             <span v-show="!side && totalItems">Uredi obrok</span>
@@ -41,7 +80,9 @@
             <aside id="app-side"> 
                 <basket-component></basket-component>
             </aside>
-        </div>>
+
+
+        </div>
 
         <script src="jspm_packages/system.js"></script>
         <script src="config.js"></script>
