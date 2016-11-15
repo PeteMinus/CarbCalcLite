@@ -6,9 +6,9 @@
                 <input type="text" placeholder="Poišči živilo..." v-model='searchQuery' debounce="500">
             </div>
             <div class="filter-category">
-                <select name="filterCategory" v-model="searchCategory" v-on:change="selectFilterCategory(searchCategory)">
-                    <option value="">Vse kategorije</option>
-                    <option value="favs">Priljubljene</option>    
+                <select name="filterCategory" v-model="searchCategory">
+                    <option v-bind:value=null>Vse kategorije</option>
+                    <!-- <option value="favs">Priljubljene</option> -->   
                     <option v-for="category in categories" v-bind:value="category">{{category}}</option>
                 </select>
             </div>
@@ -16,7 +16,7 @@
     </aside>
 
     <ul class="list-main">
-        <li v-for="product in carbs" class="list-item">
+        <li v-for="product in filteredData" class="list-item">
             <section>
                 <div class="list-item-data">
                     {{ product.name }} 
