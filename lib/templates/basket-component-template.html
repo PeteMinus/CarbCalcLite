@@ -6,7 +6,7 @@
                 <tr v-for="item in basket.items">
                     <td>
                         <div class="input-text small append">
-                            <input type="text" v-model="item.calc_weight">
+                            <input type="text" v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)" v-model="item.calc_weight">
                             <span>{{ item.unit }}</span>
                         </div>
                     </td>
