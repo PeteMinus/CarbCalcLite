@@ -17,7 +17,7 @@
                         {{ item.calc_carbs }}
                     </td>
                     <td>
-                        <button class="btn danger small">×</button>
+                        <button class="btn danger small" v-on:click="removeFromBasket(item)">×</button>
                     </td>
                 </tr>
             </tbody>
