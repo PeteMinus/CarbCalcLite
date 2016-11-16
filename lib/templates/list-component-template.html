@@ -15,8 +15,9 @@
         </div>
     </aside>
 
-    <ul class="list-main">
-        <li v-for="product in filteredData" class="list-item">
+    <transition-group class="list-main" name="list-trans" tag="ul">
+        
+        <li v-for="product in filteredData" :key="product.id" class="list-item">
             <section>
                 <div class="list-item-data">
                     {{ product.name }} 
@@ -26,10 +27,11 @@
             <section>
                 <div class="list-item-actions">
                     <div>{{ product.carbs }} ({{ product.unit }})</div>
-                    <button class="btn small default" v-if="!isInBasket(product)" v-on:click="addToBasket(product)">+ Dodaj</button>
+                    <button class="btn small default" v-on:click="addToBasket(product)" v-bind:disabled="isInBasket(product)">+ Dodaj</button>
                 </div>
             </section>
         </li>
-    </ul> 
+        
+    </transition-group> 
 </div>
 
