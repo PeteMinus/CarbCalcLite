@@ -15,9 +15,9 @@
         </div>
     </aside>
 
-    <transition-group class="list-main" name="list-trans" tag="ul">
+    <ul class="list-main" name="list-trans">
         
-        <li v-for="product in filteredData" :key="product.id" class="list-item">
+        <li v-for="product in filteredData" class="list-item">
             <section>
                 <div class="list-item-data">
                     {{ product.name }} 
@@ -32,6 +32,6 @@
             </section>
         </li>
         
-    </transition-group> 
+    </ul> 
 </div>
 
