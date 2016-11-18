@@ -32,7 +32,7 @@
                         <button v-on:click="authorsModal(true)">Avtorji</button>
                         <button v-on:click="toggleSide()">
                             <span v-show="!side && !totalItems">Sestavi obrok</span>
-                            <span v-show="!side && totalItems">Uredi obrok</span>
+                            <span class="basket-button" v-show="!side && totalItems" v-bind:data-items-count="totalItems">Uredi obrok</span>
                             <span v-show="side">Zapri</span>
                         </button>
                     </div>
