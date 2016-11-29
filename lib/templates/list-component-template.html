@@ -1,0 +1,37 @@
+<div class="list">
+
+    <aside class="list-options">
+        <div class="filter">
+            <div class="filter-query">
+                <input type="text" placeholder="Poišči živilo..." v-model='searchQuery' debounce="500">
+            </div>
+            <div class="filter-category">
+                <select name="filterCategory" v-model="searchCategory">
+                    <option v-bind:value=null>Vse kategorije</option>
+                    <!-- <option value="favs">Priljubljene</option> -->   
+                    <option v-for="category in categories" v-bind:value="category">{{category}}</option>
+                </select>
+            </div>
+        </div>
+    </aside>
+
+    <transition-group class="list-main" name="list-trans" tag="ul">
+        
+        <li v-for="product in filteredData" :key="product.id" class="list-item">
+            <section>
+                <div class="list-item-data">
+                    {{ product.name }} 
+                    <span>{{ product.weight }}{{ product.unit }}</span>
+                </div>
+            </section>
+            <section>
+                <div class="list-item-actions">
+                    <div>{{ product.carbs }} ({{ product.unit }})</div>
+                    <button class="btn small default" v-on:click="addToBasket(product)" v-bind:disabled="isInBasket(product)">+ Dodaj</button>
+                </div>
+            </section>
+        </li>
+        
+    </transition-group> 
+</div>
+
