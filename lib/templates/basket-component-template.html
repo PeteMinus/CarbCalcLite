@@ -6,7 +6,7 @@
                 <tr v-for="item in basket.items" :key="item.id">
                     <td>
                         <div class="input-text small append">
-                            <input type="number" v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)" v-model="item.calc_weight">
+                            <input class="changeqty" type="number" v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)" v-model="item.calc_weight">
                             <span>{{ item.unit }}</span>
                         </div>
                     </td>
@@ -17,7 +17,7 @@
                         {{ item.calc_carbs }}
                     </td>
                     <td>
-                        <button class="btn danger small" v-on:click="removeFromBasket(item)">×</button>
+                        <button class="btn danger small removefrombasket" v-on:click="removeFromBasket(item)">×</button>
                     </td>
                 </tr>
             </transition-group>
@@ -34,7 +34,7 @@
             Skupaj OH: <span v-text="totalCarbs"></span>
         </section>
         <section v-if="totalItems">
-            <button class="btn extrasmall danger" v-on:click="emptyBasket()">Počisti</button>
+            <button class="btn extrasmall danger emptybasket" v-on:click="emptyBasket()">Počisti</button>
         </section>
     </div>
 
