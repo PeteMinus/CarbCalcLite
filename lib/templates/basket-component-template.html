@@ -1,0 +1,41 @@
+<div class="basket">
+
+    <div class="basket-body">
+        <table class="basket-breakdown" v-if="totalItems">
+            <transition-group name="basket-list" tag="tbody" enter-active-class="animated bounceIn" leave-active-class="animated bounceOut">
+                <tr v-for="item in basket.items" :key="item.id">
+                    <td>
+                        <div class="input-text small append">
+                            <input type="number" v-on:blur="changeQty(item, $event)" v-on:keyup.enter="changeQty(item, $event)" v-model="item.calc_weight">
+                            <span>{{ item.unit }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ item.name }}
+                    </td>
+                    <td>
+                        {{ item.calc_carbs }}
+                    </td>
+                    <td>
+                        <button class="btn danger small" v-on:click="removeFromBasket(item)">×</button>
+                    </td>
+                </tr>
+            </transition-group>
+        </table>
+        <div class="basket-empty" v-if="!totalItems">
+            <div class="basket-empty-content"> 
+                <p>Za sestavo obroka dodajte živilo</p> 
+            </div>
+        </div>
+    </div>
+
+    <div class="basket-foot">
+        <section>
+            Skupaj OH: <span v-text="totalCarbs"></span>
+        </section>
+        <section v-if="totalItems">
+            <button class="btn extrasmall danger" v-on:click="emptyBasket()">Počisti</button>
+        </section>
+    </div>
+
+</div>
