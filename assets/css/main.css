@@ -304,7 +304,9 @@ a:hover {
 }
 .list > * { flex: 1; }
 
-.list-main {}
+.list-main {
+    margin-top: 30px;
+}
 
 .list-item {
     display: flex;
@@ -339,6 +341,10 @@ a:hover {
 
 .list-options {
     border-bottom: 1px solid #e6e6e6;
+    position: fixed;
+    background: #fff;
+    width: 100%;
+    z-index: 999;
 }
 
 .filter {
