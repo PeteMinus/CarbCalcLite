@@ -285,6 +285,8 @@ $__System.register('11', ['10', '12', '13', 'd', 'e', 'f'], function (_export) {
               data = _.where(data, { category: this.searchCategory });
             };
 
+            data = data.slice(0, 100);
+
             return data;
           }
         },
